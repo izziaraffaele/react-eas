@@ -1,10 +1,7 @@
 import { BaseWallet, Signer } from 'ethers';
 import {
-  Attestation,
   AttestationRequestData,
   OffchainAttestationParams,
-  SignedOffchainAttestation,
-  SchemaEncoder
 } from '@ethereum-attestation-service/eas-sdk';
 import { useEasContext } from './useEasContext';
 import { useMemo } from 'react';
@@ -14,15 +11,7 @@ export type AttestationData = {
   offchain: Omit<OffchainAttestationParams, 'schema'>;
 };
 
-export function encodeAttestationData(data: Record<string, any>, types: { name: string, type: string }[]) {
-  const signature = types.map(({ type, name }) => `${type} ${name}`).join(', ');
-  const schemaEncoder = new SchemaEncoder(signature);
-
-  const dataToEncode = types.map(type => ({ ...type, value: data[type.name] || undefined }));
-  return schemaEncoder.encodeData(dataToEncode);
-}
-
-export function useAttest(signer: Signer) {
+export function useAttest(signer?: Signer) {
   const eas = useEasContext();
 
   return useMemo(

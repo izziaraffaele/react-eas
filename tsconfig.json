@@ -4,6 +4,7 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
@@ -11,9 +12,12 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    "allowJs": true,
     "jsx": "react-jsx",
     "module": "ESNext",
     "target": "ES6",
     "moduleResolution": "node"
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"]
 }
