@@ -24,7 +24,8 @@
     "dev": "tsup --watch",
     "build": "rm -rf dist && tsup",
     "test": "jest",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "release": "release-it"
   },
   "peerDependencies": {
     "react": ">=17",
@@ -52,6 +53,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
+    "release-it": "^16.1.4",
     "ts-jest": "^29.1.1",
     "tsup": "^7.2.0",
     "typescript": "^5.1.6"

@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "before:init": [
+      "yarn test"
+    ],
+    "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+  },
+  "git": {
+    "commitMessage": "chore: release v${version}"
+  },
+  "github": {
+    "release": true
+  }
+}
