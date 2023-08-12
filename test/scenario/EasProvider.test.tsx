@@ -1,11 +1,11 @@
 import React from 'react';
 import { EAS } from '@ethereum-attestation-service/eas-sdk';
+import { MAINNET_ADDRESS, SEPOLIA_ADDRESS, render } from '../test-environment';
 import {
-  MAINNET_ADDRESS,
-  SEPOLIA_ADDRESS,
-  render,
-} from '../test-environment';
-import { EasProvider, EasContext, EasProviderProps } from '../../src/EasProvider';
+  EasProvider,
+  EasContext,
+  EasProviderProps,
+} from '../../src/EasProvider';
 
 const RENDER_NULL = () => null;
 

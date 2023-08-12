@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { createContext } from 'react';
 // eas
@@ -9,9 +9,9 @@ import { useEasController } from './hooks/useEasController';
 export const EasContext = createContext<EAS | null>(null);
 
 export type EasProviderProps = {
-  eas?: EAS,
-  address?: string,
-  options?: EASOptions
+  eas?: EAS;
+  address?: string;
+  options?: EASOptions;
 };
 
 export function EasProvider({
@@ -23,8 +23,6 @@ export function EasProvider({
   const contextValue = useEasController(eas || address, options);
 
   return (
-    <EasContext.Provider value={contextValue}>
-      {children}
-    </EasContext.Provider>
+    <EasContext.Provider value={contextValue}>{children}</EasContext.Provider>
   );
 }

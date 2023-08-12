@@ -1,3 +1,3 @@
-export * from './hooks'
-export * from './utils'
-export * from './EasProvider'
+export * from './hooks';
+export * from './utils';
+export * from './EasProvider';

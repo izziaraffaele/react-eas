@@ -59,11 +59,13 @@ describe('useEasController()', () => {
   it('should respect the options parameter when constructing a new EAS instance', () => {
     inputs.options = {
       signerOrProvider: sender,
-    }
+    };
 
     const { result: resultWithOpts } = renderTest();
 
-    expect(resultWithOpts.current.contract.runner).toBe(inputs.options.signerOrProvider);
+    expect(resultWithOpts.current.contract.runner).toBe(
+      inputs.options.signerOrProvider
+    );
   });
 
   it('should not recreate the EAS instance unnecessarily due to memoization', () => {

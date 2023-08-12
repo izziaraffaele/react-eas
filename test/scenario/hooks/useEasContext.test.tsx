@@ -14,7 +14,6 @@ import { useEasContext } from '../../../src';
 initEnvironment();
 
 describe('useEasContext()', () => {
-
   it('should return context value when called within EasProvider', () => {
     const contextValue = new EAS(MAINNET_ADDRESS);
 
@@ -37,13 +36,13 @@ describe('useEasContext()', () => {
         <ErrorBoundary fallbackRender={fallbackRender}>
           {children}
         </ErrorBoundary>
-      )
+      ),
     });
 
     await waitFor(() => expect(fallbackRender).toHaveBeenCalled());
 
-    expect(
-      fallbackRender.mock.calls[0][0].error
-    ).toEqual(new Error('Cannot use useEasContext outside of EasProvider.'));
+    expect(fallbackRender.mock.calls[0][0].error).toEqual(
+      new Error('Cannot use useEasContext outside of EasProvider.')
+    );
   });
 });

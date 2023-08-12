@@ -6,9 +6,7 @@ import { useAttest, AttestationData } from '../../../src/hooks/useAttest'; // Ad
 const { sender } = initEnvironment();
 
 const mockOffchain = {
-  signOffchainAttestation: jest.fn().mockResolvedValue(
-    'mockSignedAttestation'
-  ),
+  signOffchainAttestation: jest.fn().mockResolvedValue('mockSignedAttestation'),
 };
 
 const easMock = {
@@ -16,11 +14,11 @@ const easMock = {
     wait: () => 'mockAttestationUID',
   }),
   getAttestation: jest.fn().mockResolvedValue('mockAttestation'),
-  getOffchain: () => Promise.resolve(mockOffchain)
+  getOffchain: () => Promise.resolve(mockOffchain),
 };
 
 jest.mock('../../../src/hooks/useEasContext', () => ({
-  useEasContext: jest.fn(() => easMock)
+  useEasContext: jest.fn(() => easMock),
 }));
 
 describe('useAttest()', () => {
