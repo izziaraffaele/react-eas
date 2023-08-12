@@ -1,5 +1,12 @@
 name: Release
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      releaseitParams:
+        description: 'Release params'
+        required: false
+        default: ''
+        type: string
 jobs:
   release:
     runs-on: ubuntu-latest
