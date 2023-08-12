@@ -63,25 +63,6 @@
     "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   },
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "treeshake": true,
-    "sourcemap": "inline",
-    "minify": true,
-    "clean": true,
-    "dts": true,
-    "splitting": false,
-    "format": [
-      "cjs",
-      "esm"
-    ],
-    "external": [
-      "react"
-    ],
-    "injectStyle": false
-  },
   "engines": {
     "node": ">=14",
     "yarn": ">=1"
