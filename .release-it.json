@@ -3,6 +3,7 @@
     "before:init": [
       "yarn test"
     ],
+    "after:bump": "yarn dlx auto-changelog -p",
     "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
   },
   "git": {
