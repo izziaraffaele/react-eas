@@ -13,7 +13,9 @@ jobs:
             git config --global user.email "izziaraffaele@gmail.com"
             git config --global user.name "Izzia Raffaele"
       - name: Initialize NPM config
-        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+        run: |
+            npm config set location project
+            npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Run release
