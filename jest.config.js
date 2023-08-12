@@ -13,9 +13,7 @@ const config = {
   transform: {
     '^.+\\.(js|ts|tsx)?$': 'ts-jest',
   },
-  transformIgnorePatterns: [
-    'node_modules/(?!(multiformats)/)',
-  ],
+  transformIgnorePatterns: ['node_modules/(?!(multiformats)/)'],
 };
 
 module.exports = config;

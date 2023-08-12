@@ -1,8 +1,6 @@
 {
   "hooks": {
-    "before:init": [
-      "yarn test"
-    ],
+    "before:init": ["yarn test"],
     "after:bump": "npx auto-changelog -p",
     "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
   },

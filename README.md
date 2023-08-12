@@ -1,4 +1,3 @@
-
 # react-eas
 
 A set of hooks to easily develop apps using the Ethereum Attestation Service (EAS) with React.
@@ -37,7 +36,6 @@ or
 yarn add react-eas
 ```
 
-
 ## Usage
 
 ### Setting up `EasProvider`
@@ -48,11 +46,7 @@ Wrap your main application or the portion where you intend to use the Ethereum A
 import { EasProvider } from 'react-eas';
 
 function App() {
-  return (
-    <EasProvider>
-      {/* other components */}
-    </EasProvider>
-  );
+  return <EasProvider>{/* other components */}</EasProvider>;
 }
 ```
 
@@ -79,7 +73,10 @@ const provider = new ethers.BrowserProvider(window.ethereum);
 
 function App() {
   return (
-    <EasProvider address={EASContractAddress} options={{ signerOrProvider: provider }}>
+    <EasProvider
+      address={EASContractAddress}
+      options={{ signerOrProvider: provider }}
+    >
       {/* other components */}
     </EasProvider>
   );
@@ -89,24 +86,20 @@ function App() {
 You can also pass your custom EAS instance to the provider, offering complete flexibility.
 
 ```jsx
-const EASContractAddress = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // Sepolia v0.26
+const EASContractAddress = '0xC2679fBD37d54388Ce493F1DB75320D236e1815e'; // Sepolia v0.26
 
 // Initialize the SDK with the address of the EAS Schema contract address
 const easInstance = new EAS(EASContractAddress);
 
 // For default provider (use dedicated providers like Infura or Alchemy in production)
-const provider = ethers.providers.getDefaultProvider("sepolia");
+const provider = ethers.providers.getDefaultProvider('sepolia');
 
 // Connects an ethers style provider/signingProvider for read/write functions.
 // A signer is ESSENTIAL for write operations!
 eas.connect(provider);
 
 function App() {
-  return (
-    <EasProvider eas={easInstance}>
-      {/* other components */}
-    </EasProvider>
-  );
+  return <EasProvider eas={easInstance}>{/* other components */}</EasProvider>;
 }
 ```
 

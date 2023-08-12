@@ -28,7 +28,9 @@
     "build": "rm -rf dist && tsup",
     "test": "jest",
     "prepare": "yarn build",
-    "release": "release-it"
+    "lint": "yarn eslint src/*",
+    "release": "release-it",
+    "pre-commit": "yarn prettier"
   },
   "peerDependencies": {
     "react": ">=17",

@@ -21,13 +21,13 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Initialize Git user
         run: |
-            git config --global user.email "izziaraffaele@gmail.com"
-            git config --global user.name "Izzia Raffaele"
+          git config --global user.email "izziaraffaele@gmail.com"
+          git config --global user.name "Izzia Raffaele"
       - name: Initialize NPM config
         run: |
-            npm config set location project
-            npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
-            yarn config set registry https://registry.npmjs.org
+          npm config set location project
+          npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+          yarn config set registry https://registry.npmjs.org
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Run release
