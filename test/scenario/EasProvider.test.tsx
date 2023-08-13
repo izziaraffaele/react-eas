@@ -4,6 +4,7 @@ import { MAINNET_ADDRESS, SEPOLIA_ADDRESS, render } from '../test-environment';
 import {
   EasProvider,
   EasContext,
+  EasContextValue,
   EasProviderProps,
 } from '../../src/EasProvider';
 
@@ -11,7 +12,7 @@ const RENDER_NULL = () => null;
 
 describe('EasProvider', () => {
   let easProps: EasProviderProps = {};
-  let renderContent: (value: EAS | null) => React.ReactNode = RENDER_NULL;
+  let renderContent: (value: EasContextValue | null) => React.ReactNode = RENDER_NULL;
 
   const renderTest = () =>
     render(
@@ -32,7 +33,7 @@ describe('EasProvider', () => {
   it('provides default EAS instance when no props are provided', () => {
     renderContent = (value) => (
       <span data-testid="context-child-value">
-        {value ? 'Exists' : 'Not exists'}
+        {value?.eas ? 'Exists' : 'Not exists'}
       </span>
     );
 
@@ -44,7 +45,7 @@ describe('EasProvider', () => {
     easProps.eas = new EAS(MAINNET_ADDRESS);
     renderContent = (value) => (
       <span data-testid="context-child-value">
-        {value ? 'Exists' : 'Not exists'}
+        {value?.eas ? 'Exists' : 'Not exists'}
       </span>
     );
 
@@ -56,7 +57,7 @@ describe('EasProvider', () => {
     easProps.address = SEPOLIA_ADDRESS;
     renderContent = (value) => (
       <span data-testid="context-child-value">
-        {value ? 'Exists' : 'Not exists'}
+        {value?.eas ? 'Exists' : 'Not exists'}
       </span>
     );
 
@@ -71,7 +72,7 @@ describe('EasProvider', () => {
     easProps.eas = new EAS(MAINNET_ADDRESS);
     renderContent = (value) => (
       <span data-testid="context-child-value">
-        {value === easProps.eas ? 'Matched' : 'Not matched'}
+        {value?.eas === easProps.eas ? 'Matched' : 'Not matched'}
       </span>
     );
 

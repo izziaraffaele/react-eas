@@ -15,7 +15,7 @@ initEnvironment();
 
 describe('useEasContext()', () => {
   it('should return context value when called within EasProvider', () => {
-    const contextValue = new EAS(MAINNET_ADDRESS);
+    const contextValue = { eas: new EAS(MAINNET_ADDRESS), signer: null };
 
     // Mock useContext to return contextValue
     jest.spyOn(React, 'useContext').mockImplementation(() => contextValue);
