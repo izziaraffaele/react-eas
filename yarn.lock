@@ -499,13 +499,13 @@
   dependencies:
     hardhat "2.17.0"
 
-"@ethereum-attestation-service/eas-sdk@^1.0.0-beta.0":
-  version "1.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@ethereum-attestation-service/eas-sdk/-/eas-sdk-1.0.0-beta.0.tgz#c30186af8b7c6f31a6b0e7438208bb757b91126b"
-  integrity sha512-sQ7e8mu1Q+6kZe+Mva/6jOvwiiyrYdnLNkHX6xZayQB2YswUPnMHIDDeTRECcmnyUbv/DxE6NDCZM42yUYhqcw==
+"@ethereum-attestation-service/eas-sdk@^1.1.0-beta.1":
+  version "1.1.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@ethereum-attestation-service/eas-sdk/-/eas-sdk-1.1.0-beta.1.tgz#63c1dd7877e5427a9866248a2157f04915af68a4"
+  integrity sha512-LJT4SZY4MsYeT34wf8+7A8adLFF24Pos0QW+e66eMpNL6+Eqts9NHodXE1duts5PD6MJUKVWsSYAOxZZgZ+S4Q==
   dependencies:
     "@ethereum-attestation-service/eas-contracts" "1.0.0-beta.0"
-    ethers "^6.6.5"
+    ethers "^6.7.0"
     js-base64 "^3.7.5"
     multiformats "9.9.0"
     pako "^2.1.0"
@@ -3600,7 +3600,7 @@ ethers@^5.7.1:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-ethers@^6.6.5, ethers@^6.7.0:
+ethers@^6.7.0:
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.7.0.tgz#0f772c31a9450de28aa518b181c8cb269bbe7fd1"
   integrity sha512-pxt5hK82RNwcTX2gOZP81t6qVPVspnkpeivwEgQuK9XUvbNtghBnT8GNIb/gPh+WnVSfi8cXC9XlfT8sqc6D6w==

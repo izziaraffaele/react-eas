@@ -6,13 +6,15 @@ import { EAS, EASOptions } from '@ethereum-attestation-service/eas-sdk';
 // hooks
 import { useEasController } from './hooks/useEasController';
 
-export const EasContext = createContext<EAS | null>(null);
+export type EasContextValue = ReturnType<typeof useEasController>;
 
 export type EasProviderProps = {
   eas?: EAS;
   address?: string;
   options?: EASOptions;
 };
+
+export const EasContext = createContext<EasContextValue | null>(null);
 
 export function EasProvider({
   eas,

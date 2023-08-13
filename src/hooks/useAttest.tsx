@@ -1,4 +1,4 @@
-import { BaseWallet, Signer } from 'ethers';
+import { Signer } from 'ethers';
 import {
   AttestationRequestData,
   OffchainAttestationParams,
@@ -12,7 +12,9 @@ export type AttestationData = {
 };
 
 export function useAttest(signer?: Signer) {
-  const eas = useEasContext();
+  const { eas, signer: defaultSigner } = useEasContext();
+
+  const attestationSigner = signer || defaultSigner;
 
   return useMemo(
     () => ({
@@ -27,16 +29,16 @@ export function useAttest(signer?: Signer) {
       offchain: async (schema: string, data: AttestationData['offchain']) => {
         const offchain = await eas.getOffchain();
 
-        if (!signer) {
-          throw new Error('invalid signer');
+        if (!attestationSigner) {
+          throw new Error('Signing offchain attestations requires a signer.');
         }
 
         return offchain.signOffchainAttestation(
           { ...data, schema },
-          signer as unknown as BaseWallet
+          attestationSigner
         );
       },
     }),
-    [signer, eas]
+    [attestationSigner, eas]
   );
 }

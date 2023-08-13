@@ -29,31 +29,39 @@ describe('useEasController()', () => {
   });
 
   it('should return the default EAS instance when no parameters are provided', async () => {
-    const { result } = renderTest();
+    const {
+      result: {
+        current: { eas },
+      },
+    } = renderTest();
 
-    expect(result.current).toBeInstanceOf(EAS);
-    await expect(result.current.contract.getAddress()).resolves.toBe(
-      MAINNET_ADDRESS
-    );
+    expect(eas).toBeInstanceOf(EAS);
+    await expect(eas.contract.getAddress()).resolves.toBe(MAINNET_ADDRESS);
   });
 
   it('should return the passed EAS instance when an instance of EAS is provided', () => {
     inputs.eas = new EAS(MAINNET_ADDRESS);
 
-    const { result } = renderTest();
+    const {
+      result: {
+        current: { eas },
+      },
+    } = renderTest();
 
-    expect(result.current).toBe(inputs.eas);
+    expect(eas).toBe(inputs.eas);
   });
 
   it('should return a new EAS instance with the provided address string', async () => {
     inputs.address = SEPOLIA_ADDRESS;
 
-    const { result } = renderTest();
+    const {
+      result: {
+        current: { eas },
+      },
+    } = renderTest();
 
-    expect(result.current).toBeInstanceOf(EAS);
-    await expect(result.current.contract.getAddress()).resolves.toBe(
-      inputs.address
-    );
+    expect(eas).toBeInstanceOf(EAS);
+    await expect(eas.contract.getAddress()).resolves.toBe(inputs.address);
   });
 
   it('should respect the options parameter when constructing a new EAS instance', () => {
@@ -61,20 +69,27 @@ describe('useEasController()', () => {
       signerOrProvider: sender,
     };
 
-    const { result: resultWithOpts } = renderTest();
+    const {
+      result: {
+        current: { eas },
+      },
+    } = renderTest();
 
-    expect(resultWithOpts.current.contract.runner).toBe(
-      inputs.options.signerOrProvider
-    );
+    expect(eas.contract.runner).toBe(inputs.options.signerOrProvider);
   });
 
   it('should not recreate the EAS instance unnecessarily due to memoization', () => {
-    const { result, rerender } = renderTest();
+    const {
+      result: {
+        current: { eas },
+      },
+      rerender,
+    } = renderTest();
 
-    const initialInstance = result;
+    const initialInstance = eas;
 
     rerender(); // Re-render the hook
 
-    expect(result).toBe(initialInstance);
+    expect(eas).toBe(initialInstance);
   });
 });

@@ -1,7 +1,4 @@
-import {
-  SchemaEncoder,
-  SchemaItem,
-} from '@ethereum-attestation-service/eas-sdk';
+import { SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { encodeAttestationData } from '../../src/utils';
 
 jest.mock('@ethereum-attestation-service/eas-sdk', () => ({

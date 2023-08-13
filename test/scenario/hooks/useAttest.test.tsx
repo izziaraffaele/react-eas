@@ -1,9 +1,9 @@
-import { Signer } from 'ethers';
+import { Signer, toBigInt } from 'ethers';
 
 import { renderHook, initEnvironment } from '../../test-environment';
 import { useAttest, AttestationData } from '../../../src/hooks/useAttest'; // Adjusted path
 
-const { sender } = initEnvironment();
+const { sender, receiver: sender2 } = initEnvironment();
 
 const mockOffchain = {
   signOffchainAttestation: jest.fn().mockResolvedValue('mockSignedAttestation'),
@@ -17,18 +17,24 @@ const easMock = {
   getOffchain: () => Promise.resolve(mockOffchain),
 };
 
+const easContextMock = {
+  eas: easMock,
+  signer: sender as Signer | null,
+};
+
 jest.mock('../../../src/hooks/useEasContext', () => ({
-  useEasContext: jest.fn(() => easMock),
+  useEasContext: jest.fn(() => easContextMock),
 }));
 
 describe('useAttest()', () => {
-  let signer: Signer | undefined = sender;
+  let signer: Signer | undefined;
 
   const renderTest = () => renderHook(() => useAttest(signer));
 
   beforeEach(() => {
     jest.clearAllMocks();
-    signer = sender;
+    signer = undefined;
+    easContextMock.signer = sender;
   });
 
   it('provides onchain and offchain functions', () => {
@@ -42,37 +48,73 @@ describe('useAttest()', () => {
     it('works as expected', async () => {
       const { result } = renderTest();
 
+      const attestationData: AttestationData['onchain'] = {
+        recipient: '0xFD50b031E778fAb33DfD2Fc3Ca66a1EeF0652165',
+        expirationTime: toBigInt(0),
+        revocable: true, // Be aware that if your schema is not revocable, this MUST be false
+        data: 'encodedData',
+      };
+
       await expect(
-        result.current.onchain('mockSchema', {} as AttestationData['onchain'])
+        result.current.onchain('mockSchema', attestationData)
       ).resolves.toBe('mockAttestation');
       expect(easMock.attest).toHaveBeenCalledWith({
         schema: 'mockSchema',
-        data: {},
+        data: attestationData,
       });
       expect(easMock.getAttestation).toHaveBeenCalledWith('mockAttestationUID');
     });
   });
 
   describe('offchain', () => {
-    it('offchain function throws error when no signer is provided', async () => {
-      signer = undefined;
+    const attestationData: AttestationData['offchain'] = {
+      recipient: '0xFD50b031E778fAb33DfD2Fc3Ca66a1EeF0652165',
+      expirationTime: toBigInt(0),
+      time: toBigInt(1671219636),
+      revocable: true,
+      version: 1,
+      nonce: toBigInt(0),
+      refUID:
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+      data: 'encodedData',
+    };
+
+    it('throws error when no signer is provided', async () => {
+      easContextMock.signer = null;
       const { result } = renderTest();
 
       await expect(
-        result.current.offchain('mockSchema', {} as AttestationData['offchain'])
-      ).rejects.toThrow('invalid signer');
+        result.current.offchain('mockSchema', attestationData)
+      ).rejects.toThrow('Signing offchain attestations requires a signer.');
     });
 
-    it('offchain function works as expected with valid signer', async () => {
+    it('works as expected with default signer', async () => {
       const { result } = renderTest();
 
       await expect(
-        result.current.offchain('mockSchema', {} as AttestationData['offchain'])
+        result.current.offchain('mockSchema', attestationData)
       ).resolves.toBe('mockSignedAttestation');
 
       expect(mockOffchain.signOffchainAttestation).toHaveBeenCalledWith(
         {
-          ...{},
+          ...attestationData,
+          schema: 'mockSchema',
+        },
+        easContextMock.signer
+      );
+    });
+
+    it('works as expected with custom signer', async () => {
+      signer = sender2;
+      const { result } = renderTest();
+
+      await expect(
+        result.current.offchain('mockSchema', attestationData)
+      ).resolves.toBe('mockSignedAttestation');
+
+      expect(mockOffchain.signOffchainAttestation).toHaveBeenCalledWith(
+        {
+          ...attestationData,
           schema: 'mockSchema',
         },
         signer
