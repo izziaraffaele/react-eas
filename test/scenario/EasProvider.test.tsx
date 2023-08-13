@@ -12,7 +12,8 @@ const RENDER_NULL = () => null;
 
 describe('EasProvider', () => {
   let easProps: EasProviderProps = {};
-  let renderContent: (value: EasContextValue | null) => React.ReactNode = RENDER_NULL;
+  let renderContent: (value: EasContextValue | null) => React.ReactNode =
+    RENDER_NULL;
 
   const renderTest = () =>
     render(

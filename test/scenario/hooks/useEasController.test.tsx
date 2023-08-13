@@ -28,7 +28,7 @@ describe('useEasController()', () => {
     inputs = {};
   });
 
-  it('should return the default EAS instance when no parameters are provided', async () => {
+  it('initializes with the default contract address when no address is provided', async () => {
     const {
       result: {
         current: { eas },
@@ -39,9 +39,8 @@ describe('useEasController()', () => {
     await expect(eas.contract.getAddress()).resolves.toBe(MAINNET_ADDRESS);
   });
 
-  it('should return the passed EAS instance when an instance of EAS is provided', () => {
+  it('uses the provided EAS instance instead of creating a new one', () => {
     inputs.eas = new EAS(MAINNET_ADDRESS);
-
     const {
       result: {
         current: { eas },
@@ -51,9 +50,8 @@ describe('useEasController()', () => {
     expect(eas).toBe(inputs.eas);
   });
 
-  it('should return a new EAS instance with the provided address string', async () => {
+  it('initializes with a given address', async () => {
     inputs.address = SEPOLIA_ADDRESS;
-
     const {
       result: {
         current: { eas },
@@ -64,21 +62,7 @@ describe('useEasController()', () => {
     await expect(eas.contract.getAddress()).resolves.toBe(inputs.address);
   });
 
-  it('should respect the options parameter when constructing a new EAS instance', () => {
-    inputs.options = {
-      signerOrProvider: sender,
-    };
-
-    const {
-      result: {
-        current: { eas },
-      },
-    } = renderTest();
-
-    expect(eas.contract.runner).toBe(inputs.options.signerOrProvider);
-  });
-
-  it('should not recreate the EAS instance unnecessarily due to memoization', () => {
+  it('does not re-compute EAS unless address or options change', () => {
     const {
       result: {
         current: { eas },
@@ -91,5 +75,28 @@ describe('useEasController()', () => {
     rerender(); // Re-render the hook
 
     expect(eas).toBe(initialInstance);
+  });
+
+  it('detects and returns signer when options.signerOrProvider is a signer', () => {
+    inputs.options = {
+      signerOrProvider: sender,
+    };
+    const {
+      result: {
+        current: { signer },
+      },
+    } = renderTest();
+
+    expect(signer).toBe(inputs.options.signerOrProvider);
+  });
+
+  it('returns null for signer when options.signerOrProvider is not a signer', () => {
+    const {
+      result: {
+        current: { signer },
+      },
+    } = renderTest();
+
+    expect(signer).toBeNull();
   });
 });
