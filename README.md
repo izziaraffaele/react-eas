@@ -53,6 +53,8 @@ function App() {
 To connect to a contract deployed on a different network:
 
 ```jsx
+import { EasProvider } from 'react-eas';
+
 const EASContractAddress = '0xC2679fBD37d54388Ce493F1DB75320D236e1815e'; // Sepolia v0.26
 
 function App() {
@@ -64,21 +66,42 @@ function App() {
 }
 ```
 
-Options for the EAS SDK can be passed to the provider. This is useful for automatically connecting the SDK to a web3 signer or a provider.
+Options for the EAS SDK can be passed to the provider. This is useful for automatically connecting the SDK to a signer or a provider. To allow your users to issue attestations a signer is required.
 
 For instance, here's an example using ethers.js. For using wagmi and viem, learn how to create [ethers.js adapters](https://wagmi.sh/core/ethers-adapters#public-client--provider).
 
 ```jsx
-const provider = new ethers.BrowserProvider(window.ethereum);
+import { useEffect } from 'react';
+import { EasProvider } from 'react-eas';
+import { EASOptions } from '@ethereum-attestation-service/eas-sdk';
 
 function App() {
+  const [easOptions, setEasOptions] = useState({
+    // any default EAS option
+  } as EASOptions);
+
+  useEffect(() => {
+    async function loadSignerOrProvider() {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+
+      // loading a signer is required only if you want to enable
+      // write operations like attestation issuance.
+      const signer = await provider.getSigner();
+
+      // extend the current EAS options to add the signer (or provider)
+      setEasOptions((current) => ({
+        ...current,
+        signerOrProvider: signer
+      }));
+    }
+
+    if (window.ethereum) {
+      loadSignerOrProvider();
+    }
+  }, []);
+
   return (
-    <EasProvider
-      address={EASContractAddress}
-      options={{ signerOrProvider: provider }}
-    >
-      {/* other components */}
-    </EasProvider>
+    <EasProvider options={easOptions}>{/* other components */}</EasProvider>
   );
 }
 ```
@@ -86,6 +109,8 @@ function App() {
 You can also pass your custom EAS instance to the provider, offering complete flexibility.
 
 ```jsx
+import { EasProvider } from 'react-eas';
+
 const EASContractAddress = '0xC2679fBD37d54388Ce493F1DB75320D236e1815e'; // Sepolia v0.26
 
 // Initialize the SDK with the address of the EAS Schema contract address
@@ -95,7 +120,7 @@ const easInstance = new EAS(EASContractAddress);
 const provider = ethers.providers.getDefaultProvider('sepolia');
 
 // Connects an ethers style provider/signingProvider for read/write functions.
-// A signer is ESSENTIAL for write operations!
+// Note that a signer is ESSENTIAL for write operations!
 eas.connect(provider);
 
 function App() {
@@ -116,16 +141,14 @@ import { Signer } from 'ethers';
 import { useAttest, encodeAttestationData } from 'react-eas';
 
 const schemaUID = "0xb16fa048b0d597f5a821747eba64efa4762ee5143e9a80600d0005386edfc995";
-const schemaEncoder = new SchemaEncoder("uint256 eventId, uint8 voteIndex");
 
 type ExampleAttestationData = {
   eventId: number;
   voteIndex: number;
-}
+};
 
-function OnchainAttestComponent(props: { signer: Signer }) {
-  const { signer } = props;
-  const { onchain } = useAttest(signer);
+function OnchainAttestComponent() {
+  const { onchain } = useAttest();
 
   async function handleIssueAttestation(data: ExampleAttestationData) {
     const encodedData = encodeAttestationData(data, [
@@ -154,20 +177,17 @@ function OnchainAttestComponent(props: { signer: Signer }) {
 Example for an off-chain attestation:
 
 ```jsx
-import { Signer } from 'ethers';
 import { useAttest, encodeAttestationData } from 'react-eas';
 
 const schemaUID = "0xb16fa048b0d597f5a821747eba64efa4762ee5143e9a80600d0005386edfc995";
-const schemaEncoder = new SchemaEncoder("uint256 eventId, uint8 voteIndex");
 
 type ExampleAttestationData = {
   eventId: number;
   voteIndex: number;
 }
 
-function OffchainAttestComponent(props: { signer: Signer }) {
-  const { signer } = props;
-  const { offchain } = useAttest(signer);
+function OffchainAttestComponent() {
+  const { offchain } = useAttest();
 
   async function handleIssueAttestation(data: ExampleAttestationData) {
     const encodedData = encodeAttestationData(data, [
@@ -199,14 +219,24 @@ function OffchainAttestComponent(props: { signer: Signer }) {
 
 #### useEasContext
 
-Retrieve the underlying EAS SDK anywhere within your component tree.
+Retrieve the underlying EAS SDK anywhere within your component tree. Here is an example using [@tanstack/react-query](https://www.npmjs.com/package/@tanstack/react-query) to fetch a specific attestation
 
 ```jsx
 import { useEasContext } from 'react-eas';
+import { useQuery } from '@tanstack/react-query';
+
+const uid =
+  '0xff08bbf3d3e6e0992fc70ab9b9370416be59e87897c3d42b20549901d2cccc3e';
 
 function SomeComponent() {
-  const eas = useEasContext();
-  // Utilize the context as required
+  const { eas } = useEasContext();
+
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ['attestation', uid],
+    queryFn: () => eas.getAttestation(uid),
+  });
+
+  // rest of the code
 }
 ```
 
